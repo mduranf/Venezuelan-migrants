@@ -1,3 +1,5 @@
 # Ignore all .csv files
 *.csv
-/output
+/cleaning/output
+/cleaning/output_bogota
+
