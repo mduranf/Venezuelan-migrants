@@ -299,10 +299,11 @@ prueba <- fuerza %>% filter(is.na(directorio)) %>% select(year, ano, month)
 fuerza <- fuerza %>% 
   select(directorio, secuencia_p, orden, hogar, year, dpto,
          p6240, p6250, p6300, p6320, p6340, p3362s1, p3362s2, p3362s3, 
-         p3362s4, p3362s5, p3362s6, p3362s7) %>% 
+         p3362s4, p3362s5, p3362s6, p3362s7, p6290, p6240s2) %>% 
   rename(vivienda = directorio,
          hogar2 = secuencia_p,
          persona = orden,
+         que_hizo_conseguir_trabajo = p6290,
          que_actividad_mayor_parte = p6240,
          no_trabajo_pero_ingresos_negocio = p6250,
          desea_trabajo = p6300,
@@ -314,7 +315,8 @@ fuerza <- fuerza %>%
          clasificados = p3362s4, 
          convocatorias = p3362s5, 
          preparativos_negocio = p3362s6, 
-         otro = p3362s7) %>% 
+         otro_trabajo_informal = p3362s7,
+         recibe_remuneracion = p6240s2) %>% 
   mutate(hogar = if_else(!is.na(hogar), hogar, hogar2),
          id = as.numeric(str_c(vivienda, hogar, persona))) %>% 
   select(-hogar2)
@@ -332,7 +334,7 @@ ocupados <- ocupados %>%
          p1805, p6880, p6915, p6920, p6930, p6940, p6960, p6990,
          p760, p7130, p7140s4, p7240, inglabo, p6410s1, p6424s5,
          p6480, p6980, p6980s1, p6980s2, p6980s3, p6980s4, p6980s5, 
-         p6980s6, p6980s7, p6980s8,) %>% 
+         p6980s6, p6980s7, p6980s8,p6772) %>% 
   rename(vivienda = directorio,
          hogar2 = secuencia_p,
          persona = orden,
@@ -367,7 +369,8 @@ ocupados <- ocupados %>%
          inversiones_vejez = p6980s4,
          seguro_vejez = p6980s5, 
          hijos_vejez = p6980s6, 
-         nada_vejez = p6980s8,) %>% 
+         nada_vejez = p6980s8,
+         negocio_regustrado_independiente = p6772) %>% 
   mutate(hogar = if_else(!is.na(hogar), hogar, hogar2),
          vacaciones_sueldo = if_else(!is.na(vacaciones_sueldo), vacaciones_sueldo, vacaciones_sueldo2),
          id = as.numeric(str_c(vivienda, hogar, persona))) %>%  

@@ -131,6 +131,34 @@ final <- bind_rows(personas_merged, recovered) %>%
          siempre_ha_vivido, donde_nacio, nacio_otro_dpto, year_llego_col,
          everything())
 
+final <- final %>% 
+  mutate(nacionalidad = ifelse(is.na(nacio_otro_pais), "Colombian", NA),
+         nacionalidad = ifelse(is.na(nacionalidad) & nacio_otro_pais == 3, "Venezuelan", nacionalidad),
+         nacionalidad = ifelse(is.na(nacionalidad), "otro", nacionalidad),
+         informal = ifelse(tiene_contrato == 2, 1, NA),
+         informal = ifelse(tiene_contrato == 1 & quien_paga_pension == 2, 1, informal),
+         informal = ifelse(tiene_contrato == 1 & quien_paga_pension == 4, 1, informal),
+         informal = ifelse(cotizando_pensiones == 2, 1, informal),
+         informal = ifelse(afiliado_seguridad_s == 2, 1, informal),
+         informal = ifelse(is.na(informal) & recibe_remuneracion == 2, 1, informal),
+         informal = ifelse(is.na(informal) & otro_trabajo_informal == 1, 1, informal),
+         informal = ifelse(is.na(informal) & aseguradora_riesgos_prof == 2, 1, informal),
+         informal = ifelse(is.na(informal) & donde_realiza_trabajo < 6, 1, informal),
+         informal = ifelse(is.na(informal) & negocio_regustrado_independiente != 1, 1, informal),
+         informal = ifelse(is.na(informal) & oficio_trabajo1 < 99, 1, informal),
+         informal = ifelse(is.na(informal) & oficio_trabajo2 < 99, 1, informal),
+         informal = ifelse(is.na(informal) & otro_trabajo_informal == 1, 1, informal),
+         informal = ifelse(is.na(informal) & tiene_contrato == 2, 1, informal),
+         informal = ifelse(is.na(informal) & tiene_contrato == 1 & verbal_escrtio == 1, 1, informal),
+         informal = ifelse(is.na(informal) & formas_trabajo == 6, 1, informal),
+         informal = ifelse(is.na(informal) & trabajo_tipo == 1, 1, informal),
+         informal = ifelse(is.na(informal) & !is.na(por_que_independiente), 1, informal),
+         informal = ifelse(is.na(informal), 0, informal),
+         regularizado = ifelse(year_llego_col >= 2021, 0, NA),
+         regularizado = ifelse(year_llego_col >= 2017 & year_llego_col < 2021, 1, regularizado))
+
+final <- final %>% select(id, vivienda, hogar, persona, year, nacionalidad, edad, sexo, year_llego_col, informal, regularizado, everything())
+
 write_parquet(final, "~/Documents/git/Venezuelan-migrants/merge/output/geih_bogota.parquet")
 
 
